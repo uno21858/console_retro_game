@@ -25,11 +25,11 @@ function App() {
   }, [data]);
 
   return (
-      <div className="flex">
-        <LeftControl />
-        <Screen pokemones={pokemones} />
-        <RightControl />
-      </div>
+<div className="h-128 flex gap-4 p-4">
+  <div className="w-56"><LeftControl /></div>
+  <div className="flex-1 min-w-0"><Screen pokemones={pokemones} /></div>
+  <div className="w-56"><RightControl /></div>
+</div>
   );
 }
 

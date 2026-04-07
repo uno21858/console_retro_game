@@ -1,14 +1,13 @@
 
-
-
-
-
 const Screen = ({pokemones}) => {
 
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl px-64 py-8 ring shadow-xl ring-gray-900/5 border-20 border-solid">
+        <div className="h-full w-full rounded-xl bg-white ring-1 ring-gray-900/5 shadow-xl border-4 border-black p-4 overflow-auto">
             {pokemones?.map((pokemon) => (
-                <p key={pokemon.name}>{pokemon.name}</p>
+                [     //  Garcias a q se pueden usar los `[]`
+                    <p key={pokemon.name}>{pokemon.name}</p>,
+                    <img src={pokemon?.sprites?.front_default} className="w-40 h-40" alt={"pokemon Img smn"}/>
+                ]
             ))}
         </div>
     )

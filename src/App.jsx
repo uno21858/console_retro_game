@@ -8,7 +8,7 @@ import GameScreen from "./components/GameScreen.jsx";
 
 function App() {
   const url = 'https://pokeapi.co/api/v2/pokemon?limit=100&offset=0';
-  const { data } = useFetch(url);
+  const { data } = useFetch(url); // TODO: agregar el loading y error
   const [pokemones, setPokemones] = useState([]);
   const [position, setPosition] = useState(1);
   const [myPokemonSelection, setMyPokemonSelection] = useState([]);
@@ -32,7 +32,7 @@ function App() {
         id: e.id,
         moves: e.moves.map((move) => ({
           ...move,
-          attack: getRandomInt(1, 400),
+          attack: getRandomInt(1, pokemones.length),
         })),
         sprites: e.sprites,
       }));

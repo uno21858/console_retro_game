@@ -4,11 +4,11 @@ function LeftController({ handleDirection }) {
     const dPadButtonClass = 'absolute h-8 w-8 rounded-md border-2 border-black bg-zinc-900 hover:bg-zinc-700';
 
     return (
-        <div className="flex h-full w-full flex-col items-center justify-between rounded-[2.2rem] border-4 border-black bg-red-600 px-4 py-5 shadow-xl">
+        <div className="flex h-full w-full flex-col items-center justify-between rounded-[2.2rem] border-4 border-black bg-blue-600 px-4 py-5 shadow-xl">
             {/* Parte superior del controlador */}
             <div className="flex w-full items-center justify-between">
+                <div/>
                 <div className="h-3 w-8 rounded-full bg-black/80" />
-                <div className="h-4 w-4 rounded-full border-2 border-black bg-red-400" />
             </div>
 
             {/* Joystick o botón central */}

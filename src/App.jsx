@@ -8,67 +8,75 @@ import GameScreen from "./components/GameScreen.jsx";
 
 function App() {
   const url = 'https://pokeapi.co/api/v2/pokemon?limit=100&offset=0';
-  const { data, loading, error } = useFetch(url);
-
+  const { data } = useFetch(url);
   const [pokemones, setPokemones] = useState([]);
-
-
-  const getListPokemones = () => {
-    if (!data?.results) return;
-    const list = data.results.filter((p) => p.url);
-    const plist = list.map((l) => fetch(l.url).then((res) => res.json()));
-    Promise.all(plist).then((values) => {
-      console.log('promesa values', values);
-      setPokemones(values);
-    });
-  };
-
-  useEffect(() => {
-    getListPokemones();
-  }, [data]);
-
-
-
-  const [position,setPosition] = useState(  [0]);
+  const [position, setPosition] = useState(1);
   const [myPokemonSelection, setMyPokemonSelection] = useState([]);
   const [pcPokemonSelection, setPcPokemonSelection] = useState([]);
-
-  const handleDirection = (direction) => {
-    if (direction === 'right') {
-      setPosition((prev) => prev + 1);
-    } else {
-      setPosition((prev) => prev -1 )
-    }
-  }
 
   function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
-    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled); // The maximum is exclusive and the minimum is inclusive
+    return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
   }
+
+  useEffect(() => {
+    if (!data?.results) return;
+
+    const fetchAll = async () => {
+      const list = data.results.filter((p) => p.url);
+      const plist = list.map((l) => fetch(l.url).then((res) => res.json()));
+      const values = await Promise.all(plist);
+      const saniData = values.map((e) => ({
+        name: e.name,
+        id: e.id,
+        moves: e.moves.map((move) => ({
+          ...move,
+          attack: getRandomInt(1, 400),
+        })),
+        sprites: e.sprites,
+      }));
+      console.log({ saniData });
+      setPokemones(saniData);
+    };
+
+    fetchAll();
+  }, [data]);
+
+  const handleDirection = (direction) => {
+    console.log(direction);
+    if (direction === 'right') {
+      setPosition((prev) => prev + 1);
+    } else if (direction === 'left') {
+      setPosition((prev) => prev - 1);
+    } else if (direction === 'up') {
+      setPosition((prev) => prev - 8);
+    } else {
+      setPosition((prev) => prev + 8);
+    }
+  };
 
   const computerSelection = () => {
-    const pc = pokemones.filter((p) => p.id === rnd)
-    const rnd = getRandomInt(0, 100)
-    setPcPokemonSelection(pc)
-
-  }
+    const rnd = getRandomInt(0, pokemones.length);
+    const pc = pokemones.filter((p) => p.id === rnd);
+    setPcPokemonSelection(pc);
+  };
 
   const handleSelection = () => {
     const selectedPokemon = pokemones.filter((p) => p.id === position);
     setMyPokemonSelection(selectedPokemon);
     computerSelection();
-  }
+  };
 
   return (
       <div className="h-128 flex gap-4 p-4 justify-center">
-        <div className="w-56"><LeftControl handleDirection={handleDirection}/></div>
+        <div className="w-56"><LeftControl handleDirection={handleDirection} /></div>
         {myPokemonSelection.length && pcPokemonSelection.length ? (
-            <GameScreen/>
+            <GameScreen />
         ) : (
-            <div className="flex-1 min-w-0"><Screen pokemones={pokemones} position={position} /></div>
+            <div className="flex-1"><Screen pokemones={pokemones} position={position} /></div>
         )}
-        <div className="w-56"><RightControl handleDirection={handleSelection} /></div>
+        <div className="w-56"><RightControl handleSelection={handleSelection} /></div>
       </div>
   );
 }

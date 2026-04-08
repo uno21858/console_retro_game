@@ -22,7 +22,7 @@ function PokemonCard({ pokemon, label }) {
 
 function GameScreen({ miSeleccion, pcSeleccionado }) {
     return (
-        <div className="flex flex-1 flex-col items-center justify-center gap-8 rounded-xl border-4 border-black bg-zinc-900 p-6">
+        <div className="flex flex-1 flex-col items-center justify-center gap-8 rounded-xl border-4 border-black p-6 bg-cover bg-center" style={{ backgroundImage: 'url("/image.jpg")', contain: "size" }}>
             <div className="flex w-full items-center justify-around">
                 <PokemonCard pokemon={miSeleccion} label="Tu" />
                 <span className="text-4xl font-black text-white">VS</span>

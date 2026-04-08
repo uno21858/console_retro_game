@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import LeftControl from './components/LeftController.jsx';
-import RightControl from './components/RightController';
-import Screen from './components/Screen';
-import useFetch from './hooks/useFetch';
-import GameScreen from "./components/GameScreen.jsx";
+import { GameScreen, LeftController as LeftControl, RightController as RightControl, Screen } from './components';
+import { useFetch } from './hooks';
+import { validateMovement } from './utils';
 
 function App() {
   const url = 'https://pokeapi.co/api/v2/pokemon?limit=100&offset=0';
@@ -44,16 +42,7 @@ function App() {
   }, [data]);
 
   const handleDirection = (direction) => {
-    console.log(direction);
-    if (direction === 'right') {
-      setPosition((prev) => prev + 1);
-    } else if (direction === 'left') {
-      setPosition((prev) => prev - 1);
-    } else if (direction === 'up') {
-      setPosition((prev) => prev - 8);
-    } else {
-      setPosition((prev) => prev + 8);
-    }
+    setPosition((prev) => validateMovement(prev, direction, pokemones.length));
   };
 
   const computerSelection = () => {
@@ -72,7 +61,7 @@ function App() {
       <div className="h-128 flex gap-4 p-4 justify-center">
         <div className="w-56"><LeftControl handleDirection={handleDirection} /></div>
         {myPokemonSelection.length && pcPokemonSelection.length ? (
-            <GameScreen />
+            <GameScreen miSeleccion={myPokemonSelection[0]} pcSeleccionado={pcPokemonSelection[0]} />
         ) : (
             <div className="flex-1"><Screen pokemones={pokemones} position={position} /></div>
         )}

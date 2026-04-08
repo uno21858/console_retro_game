@@ -1,0 +1,1 @@
+export { validateMovement } from './MovementValidator';

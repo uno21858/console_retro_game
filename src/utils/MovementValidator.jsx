@@ -1,5 +1,5 @@
 // Definido por el tama;o de la pantalla q estoy usando
-const COLS = 7;
+const COLS = 5;
 
 
 /**

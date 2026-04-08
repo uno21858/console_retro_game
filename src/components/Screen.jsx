@@ -17,8 +17,8 @@ const Screen = ({ pokemones, position }) => {
                         <div
                             key={index}
                             ref={position === pokemon.id ? selectedPokemon : null}
-                            style={{ color: position === pokemon.id ? 'red' : 'White' }}
-                            className="flex flex-col border-2"
+                            style={{ color: position === pokemon.id ? 'red' : 'white' }}
+                            className="flex flex-col border-2 m-1.5"
                         >
                             <p>{pokemon.name}</p>
                             <img

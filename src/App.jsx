@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { GameScreen, LeftController as LeftControl, RightController as RightControl, Screen } from './components';
+import { GameScreen, LeftController as LeftControl, PokemonDetails, RightController as RightControl, Screen } from './components';
 import { useFetch } from './hooks';
 import { validateMovement } from './utils';
 
@@ -18,27 +18,33 @@ function App() {
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
   }
 
+  const getListPokemones = () => {
+    const list = data?.results?.filter((p) => p.url);
+    const plist = list?.map((l) => fetch(l.url).then((res) => res.json()));
+
+    Promise.all(plist).then((values) => {
+      const saniData = values?.map((e) => {
+        return {
+          name: e.name,
+          id: e.id,
+          types: e.types,
+          moves: e.moves.map((e) => {
+            return {
+              ...e,
+              attack: getRandomInt(20, 98),
+            };
+          }),
+          sprites: e.sprites,
+        };
+      });
+
+      setPokemones(saniData);
+    });
+  };
+
   useEffect(() => {
     if (!data?.results) return;
-
-    const fetchAll = async () => {
-      const list = data.results.filter((p) => p.url);
-      const plist = list.map((l) => fetch(l.url).then((res) => res.json()));
-      const values = await Promise.all(plist);
-      const saniData = values.map((e) => ({
-        name: e.name,
-        id: e.id,
-        moves: e.moves.map((move) => ({
-          ...move,
-          attack: getRandomInt(1, pokemones.length),
-        })),
-        sprites: e.sprites,
-      }));
-      console.log({ saniData });
-      setPokemones(saniData);
-    };
-
-    fetchAll();
+    getListPokemones();
   }, [data]);
 
   const handleDirection = (direction) => {
@@ -57,15 +63,24 @@ function App() {
     computerSelection();
   };
 
+
+
   return (
-      <div className="h-128 flex gap-4 p-4 justify-center">
-        <div className="w-56"><LeftControl handleDirection={handleDirection} /></div>
-        {myPokemonSelection.length && pcPokemonSelection.length ? (
-            <GameScreen miSeleccion={myPokemonSelection[0]} pcSeleccionado={pcPokemonSelection[0]} />
-        ) : (
-            <div className="flex-1"><Screen pokemones={pokemones} position={position} /></div>
-        )}
-        <div className="w-56"><RightControl handleSelection={handleSelection} /></div>
+      <div>
+        <div className="h-128 flex gap-4 p-4 justify-center">
+          <div className="w-56"><LeftControl handleDirection={handleDirection}/></div>
+          {myPokemonSelection.length && pcPokemonSelection.length ? (
+              <GameScreen miSeleccion={myPokemonSelection[0]} pcSeleccionado={pcPokemonSelection[0]}/>
+          ) : (
+              <div className="flex-1"><Screen pokemones={pokemones} position={position}/></div>
+          )}
+          <div className="w-56"><RightControl handleSelection={handleSelection}/></div>
+        </div>
+
+        <div className={"justify-center flex items-center rounded-t-xl"}>
+          <PokemonDetails actual={myPokemonSelection} />
+        </div>
+
       </div>
   );
 }

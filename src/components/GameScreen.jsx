@@ -5,7 +5,7 @@ import React from 'react';
  * @param {Object} pokemon - Objeto pokemon con name y sprites.
  * @param {string} label - Etiqueta que aparece arriba ("Tu" / "PC").
  */
-function PokemonCard({ pokemon, label }) {
+const PokemonCard = ({ pokemon, label }) => {
     return (
         <div className="flex flex-col items-center gap-2">
             <p className="text-xs font-bold text-white/70 uppercase tracking-widest">{label}</p>

@@ -65,6 +65,8 @@ function App() {
 
 
 
+  const pokemonActual = pokemones.filter((p) => p.id === position);
+
   return (
       <div>
         <div className="h-128 flex gap-4 p-4 justify-center">
@@ -78,7 +80,7 @@ function App() {
         </div>
 
         <div className={"justify-center flex items-center rounded-t-xl"}>
-          <PokemonDetails actual={myPokemonSelection} />
+          <PokemonDetails actual={pokemonActual} />
         </div>
 
       </div>

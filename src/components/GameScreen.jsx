@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { HealthBar } from './index.js';
 
 /**
  * Tarjeta visual de un pokemon en la pantalla de batalla.
  * @param {Object} pokemon - Objeto pokemon con name y sprites.
  * @param {string} label - Etiqueta que aparece arriba ("Tu" / "PC").
  */
-const PokemonCard = ({ pokemon, label }) => {
+const PokemonCard = ({ pokemon, label, hp }) => {
     return (
         <div className="flex flex-col items-center gap-2">
             <p className="text-xs font-bold text-white/70 uppercase tracking-widest">{label}</p>
@@ -15,18 +16,22 @@ const PokemonCard = ({ pokemon, label }) => {
                 alt={pokemon.name}
                 className="w-45 h-45"
             />
+            <HealthBar hp={hp} label={label} />
         </div>
     );
 }
 
 
 function GameScreen({ miSeleccion, pcSeleccionado }) {
+    const [myHP, setMyHP] = useState(100);
+    const [pcHP, setPcHP] = useState(100);
+
     return (
         <div className="flex flex-1 flex-col items-center justify-center gap-8 rounded-xl border-4 border-black p-6 bg-cover bg-center" style={{ backgroundImage: 'url("/image.jpg")', contain: "size" }}>
             <div className="flex w-full items-center justify-around">
-                <PokemonCard pokemon={miSeleccion} label="Tu" />
+                <PokemonCard pokemon={miSeleccion} label="Tu" hp={myHP} />
                 <span className="text-4xl font-black text-white">VS</span>
-                <PokemonCard pokemon={pcSeleccionado} label="PC" />
+                <PokemonCard pokemon={pcSeleccionado} label="PC" hp={pcHP} />
             </div>
         </div>
     );

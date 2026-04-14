@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { HealthBar } from './index.js';
 
 /**
@@ -22,9 +22,7 @@ const PokemonCard = ({ pokemon, label, hp }) => {
 }
 
 
-function GameScreen({ miSeleccion, pcSeleccionado }) {
-    const [myHP, setMyHP] = useState(100);
-    const [pcHP, setPcHP] = useState(100);
+function GameScreen({ miSeleccion, pcSeleccionado, myHP, pcHP, battleLog }) {
 
     return (
         <div className="flex flex-1 flex-col items-center justify-center gap-8 rounded-xl border-4 border-black p-6 bg-cover bg-center" style={{ backgroundImage: 'url("/image.jpg")', contain: "size" }}>
@@ -33,6 +31,11 @@ function GameScreen({ miSeleccion, pcSeleccionado }) {
                 <span className="text-4xl font-black text-white">VS</span>
                 <PokemonCard pokemon={pcSeleccionado} label="PC" hp={pcHP} />
             </div>
+            {battleLog && (
+                <div className="border-2 border-white/30 rounded-lg bg-black/60 px-6 py-2 text-white text-lg text-center font-bold">
+                    {battleLog}
+                </div>
+            )}
         </div>
     );
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import { GameScreen, LeftController as LeftControl, PokemonDetails, RightController as RightControl, Screen } from './components';
+import { GameScreen, LeftController as LeftControl, PokemonDetails, RightController as RightControl, Screen, WinnerScreen } from './components';
 import { useFetch } from './hooks';
 import { validateMovement, Attacks } from './utils';
 
@@ -16,6 +16,8 @@ function App() {
   const [pcHP, setPcHP] = useState(100);
   const [battleLog, setBattleLog] = useState('');
   const [isFighting, setIsFighting] = useState(false);
+  const [winner, setWinner] = useState(null);
+  const [loser, setLoser] = useState(null);
 
   function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
@@ -83,7 +85,8 @@ function App() {
     setBattleLog(`Tu ${myPokemonSelection[0].name} usó ${miAtaque.move} y causó ${miAtaque.damage} de daño!`);
 
     if (nuevoPcHP === 0) {
-      setBattleLog(`Tu ${myPokemonSelection[0].name} gano! El PC se quedo sin HP.`);
+      setWinner(myPokemonSelection[0]);
+      setLoser(pcPokemonSelection[0]);
       setIsFighting(true);
       return;
     }
@@ -95,7 +98,8 @@ function App() {
       setMyHP(nuevoMyHP);
 
       if (nuevoMyHP === 0) {
-        setBattleLog(`El PC gano! Tu ${myPokemonSelection[0].name} se quedo sin HP.`);
+        setWinner(pcPokemonSelection[0]);
+        setLoser(myPokemonSelection[0]);
         setIsFighting(true);
       } else {
         setBattleLog(`PC ${pcPokemonSelection[0].name} usó ${pcAtaque.move} y causó ${pcAtaque.damage} de daño!`);
@@ -113,6 +117,8 @@ function App() {
     setBattleLog('');
     setIsFighting(false);
     setPosition(1);
+    setWinner(null);
+    setLoser(null);
   };
 
   const pokemonActual = isSelected ? myPokemonSelection : pokemones.filter((p) => p.id === position);
@@ -121,7 +127,9 @@ function App() {
       <div>
         <div className="h-128 flex gap-4 p-4 justify-center">
           <div className="w-56"><LeftControl handleDirection={handleDirection}/></div>
-          {myPokemonSelection.length && pcPokemonSelection.length ? (
+          {winner ? (
+              <WinnerScreen winner={winner} loser={loser} onReset={handleReset} />
+          ) : myPokemonSelection.length && pcPokemonSelection.length ? (
               <GameScreen miSeleccion={myPokemonSelection[0]} pcSeleccionado={pcPokemonSelection[0]} myHP={myHP} pcHP={pcHP} battleLog={battleLog}/>
           ) : (
               <div className="flex-1"><Screen pokemones={pokemones} position={position}/></div>
